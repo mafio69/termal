@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 use App\Customer;
 use App\Note;
 use Illuminate\Validation\Rule;
+use App\Status;
+use App\Event;
+use App\Person;
+
 
 class CustomersController extends Controller
 {
@@ -18,14 +22,22 @@ class CustomersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($statuses_id = null)
     {
+        if($statuses_id == null){
         $customer=Customer::orderBy('city','ASC')->get();
         $count = $customer->count()-1;
-        $customers=Customer::orderBy('city','ASC')->paginate(20);
+        $statuses = Status::orderBy('name')->get();
+        $customers=Customer::with('status')->with('events')->where('id','<>',55)->orderBy('city','ASC')->paginate(20);
         $notes = Note::all();
-
-        return view('customers.index', compact('customers','notes','count'));
+        }else{
+        $customer=Customer::where('statuses_id',$statuses_id)->orderBy('city','ASC')->get();
+        $count = $customer->count();
+        $statuses = Status::orderBy('name')->get();
+        $customers=Customer::with('status')->with('events')->where('id','<>',55)->where('statuses_id',$statuses_id)->orderBy('city','ASC')->paginate(20);
+        $notes = Note::all();   
+        }
+        return view('customers.index', compact('customers','notes','count','statuses'));
     }
 
     /**
@@ -35,7 +47,9 @@ class CustomersController extends Controller
      */
     public function create()
     {
-       return view ('customers.create');
+        $statuses = Status::get();
+
+        return view('customers.create',compact('statuses'));
     }
 
     /**
@@ -50,6 +64,7 @@ class CustomersController extends Controller
         $this->validate($request, [
             'company' => 'required|min:3',
             'email' => 'required|email|unique:customers',
+            'phone' => 'phone|unique:customers',
         ],[
                 'required' => 'Pole :attribute jest wymagane.',
                 'email' => 'Pole :attribute musi być poprawnym adresem email.',
@@ -70,11 +85,11 @@ class CustomersController extends Controller
             'nip' => trim($request->nip),
             'web' => trim($request->web),
             'email' => trim($request->email),
-            'person_id' => $request->person,
+            'statuses_id' => $request->statuses_id,
             'notes' => trim($request->notes),
 
         ]);
-        return back();
+        return redirect('/klienci-status');
     }
 
     /**
@@ -85,10 +100,13 @@ class CustomersController extends Controller
      */
     public function show($id)
     {
-        $customer=Customer::with('person')->find($id);
+
+        $customer=Customer::with('person')->with('status')->find($id);
+        //var_dump($customer->status());
+        $events = Event::with('event_type')->with('customer')->with('user')->with('person')->where('customer_id',$id)->orderBy('event_data')->get();
         $notes = Note::where('customer_id',$customer->id)->orderBy('created_at','desc')->limit(10)->get();
         
-        return view('customers.show',compact('customer','notes'));
+        return view('customers.show',compact('customer','notes','events'));
     }
 
     /**
@@ -99,8 +117,9 @@ class CustomersController extends Controller
      */
     public function edit($id)
     {
-        $customer=Customer::find($id);
-        return view('customers.edit',compact('customer'));
+        $statuses = Status::get();
+        $customer=Customer::with('status')->find($id);
+        return view('customers.edit',compact('customer','statuses'));
     }
 
     /**
@@ -124,6 +143,7 @@ class CustomersController extends Controller
         );
 
         Customer::where('id', $id)->update([
+            'user_id' => auth()->id(),
             'company' => $request->company,
             'city' => $request->city,
             'nr' => $request->nr,
@@ -136,7 +156,7 @@ class CustomersController extends Controller
             'nip' => $request->nip,
             'web' => $request->web,
             'email' => $request->email,
-            'person_id' => $request->person,
+            'statuses_id' => $request->statuses_id,
             'notes' => $request->notes,
         ]);
 
@@ -154,6 +174,9 @@ class CustomersController extends Controller
         $customer =Customer::find($id);
         $customer->delete();
         Note::where('customer_id',$id)->delete();
-        return redirect('/klienci');
+        Person::where('customer_id',$id)->delete();
+        Event::where('customer_id',$id)->delete();
+        session()->flash('flash_message', 'Klient został usunięty , wraz z wszytkimi danymi o nim!');
+        return redirect('/klienci-status');
     }
 }

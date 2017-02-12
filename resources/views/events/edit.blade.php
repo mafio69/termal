@@ -8,15 +8,15 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">Dodaj uzytkownika</div>
                     <div class="panel-body">
-
-                        <form class="form-horizontal" role="form" method="POST" action="{{url('/users/store')}}">
+                       <form method="post" action="{{url('/users/'.$user->id)}}">
                             {{ csrf_field() }}
+                            {{ method_field('PUT') }}
 
                             <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                                 <label for="name" class="col-md-4 control-label">Nazwa</label>
 
                                 <div class="col-md-6">
-                                    <input id="name" type="text" class="form-control" name="name" value="{{ old('name') }}" required autofocus>
+                                    <input id="name" type="text" class="form-control" name="name" value="{{ $user->name }}" required autofocus>
 
                                     @if ($errors->has('name'))
                                         <span class="help-block">
@@ -30,7 +30,7 @@
                                 <label for="email" class="col-md-4 control-label">E-Mail Adres</label>
 
                                 <div class="col-md-6">
-                                    <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required>
+                                    <input id="email" type="email" class="form-control" name="email" value="{{ $user->email }}" required>
 
                                     @if ($errors->has('email'))
                                         <span class="help-block">
@@ -45,37 +45,17 @@
                                 <div class="col-md-6">
                                     <select class="form-control" name="role_id">
                                         @foreach($roles as $role)
-                                        <option   {{ $role->type == 'user' ? ' selected ' : '' }} value="{{$role->id}}">{{$role->type}}</option>
+                                        <option {{ $user->role_id == $role->id ? ' selected ' : '' }} value="{{$role->id}}">{{$role->type}}</option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
-                            <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
-                                <label for="password" class="col-md-4 control-label">Hasło</label>
 
-                                <div class="col-md-6">
-                                    <input id="password" type="password" class="form-control" name="password" required>
-
-                                    @if ($errors->has('password'))
-                                        <span class="help-block">
-                                        <strong>{{ $errors->first('password') }}</strong>
-                                    </span>
-                                    @endif
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="password-confirm" class="col-md-4 control-label">Powtórz hasło</label>
-
-                                <div class="col-md-6">
-                                    <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
-                                </div>
-                            </div>
 
                             <div class="form-group">
                                 <div class="col-md-6 col-md-offset-4">
                                     <button type="submit" class="btn btn-primary">
-                                        Dodaj
+                                        Popraw
                                     </button>
                                 </div>
                             </div>

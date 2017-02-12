@@ -1,18 +1,30 @@
 @extends('layouts.app')
 
 @section('content')
+	<h4>Lista klientów <span class="badge">{{$count}}</span> </h4>
+	{{ $customers->links() }}
+        <div class="dropdown " style="margin-bottom: .5rem;">
+         <button class="btn btn-default dropdown-toggle btn-sm" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Filtruj<span class="caret"></span></button>
+         <ul class="dropdown-menu " aria-labelledby="dropdownMenu1">
+             <li> <a href="{{url('/klienci-status')}}">Bez filtra</a></li>
+             @foreach($statuses as $status)
+             <li> <a href="{{url('/klienci-status/'.$status->id)}}">{{$status->name}}</a></li>
+             @endforeach
+         </ul>  
+        </div>
 <div class="table-responsive">
-<h4>Lista klientów <span class="badge">{{$count}}</span> </h4>
-{{ $customers->links() }}
 <table class="table">
-	<tr><th>Firma</th><th>Miasto</th><th>Telefon</th><th>Email</th><th>WWW</th><th>Akcja</th></tr>
+	<tr><th>Firma</th><th>Status</th><th>Miasto</th><th>Telefon</th><th>Email</th><th>WWW</th><th>Akcja</th></tr>
 	@foreach($customers as $customer)
 	 @if($customer->id !== 55)
 	
 	
 		<tr>
 			<td>
-			<a href="{{url('/klienci/'.$customer->id)}}" style="color:grey;" title="Pokaż">{{$customer->company}}</a>
+			<a href="{{url('/klienci/'.$customer->id)}}" class="link-grey" title="Pokaż">{{$customer->company}}</a>
+			</td>
+			<td>
+				{{$customer->status->name}}
 			</td>
 			<td>
 			{{$customer->city}}
@@ -36,6 +48,7 @@
    		 				<span class="caret"></span>
   				</button>
 				  <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
+					  <li><a href="{{url('/zdarzenie-dodaj/'.$customer->id)}}" title="Dodaj zdarzenie"><i class="fa fa-plus" aria-hidden="true"></i> Dodaj zdarzenie</a></li>
 				    <li><a href="{{url('/klienci/'.$customer->id)}}" title="Pokaż"><i class="fa fa-eye" aria-hidden="true"></i> Pokaż</a></li>
 					  <li> <a href="{{url('/osoba/'.$customer->id.'/create')}}" title="Dodaj osobę kontaktową."  ><i class="fa fa-user" aria-hidden="true"></i> Dodaj osobę kontaktową</a></li>
 					@if($notes->contains('customer_id',$customer->id))

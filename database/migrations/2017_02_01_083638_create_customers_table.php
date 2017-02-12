@@ -15,6 +15,8 @@ class CreateCustomersTable extends Migration
     {
         Schema::create('customers', function (Blueprint $table) {
             $table->increments('id');
+            $table->unsignedMediumInteger('user_id');
+            $table->unsignedTinyInteger('statuses_id');
             $table->string('company');
             $table->string('street')->nullable();
             $table->string('nr')->nullable();
@@ -27,9 +29,10 @@ class CreateCustomersTable extends Migration
             $table->string('nip')->nullable();
             $table->string('web')->nullable();
             $table->string('email')->nullable();
-            $table->integer('person_id')->nullable()->unsigned();
+
             $table->mediumtext('notes')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

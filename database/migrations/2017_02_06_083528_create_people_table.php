@@ -16,6 +16,7 @@ class CreatePeopleTable extends Migration
         Schema::create('people', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('customer_id')->unsigned();
+            $table->unsignedMediumInteger('user_id');
             $table->string('imie',60);
             $table->string('nazwisko',60);
             $table->string('position',80);
@@ -25,6 +26,7 @@ class CreatePeopleTable extends Migration
             $table->string('address');
             $table->string('description')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

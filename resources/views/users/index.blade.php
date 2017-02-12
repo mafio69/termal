@@ -16,8 +16,8 @@
         </thead>
         <tbody>
         @foreach($users as $user)
-        <tr>
-            <td>{{$user->name}}</td>
+        <tr class="{{$user->not_active ? 'text-muted bg-warning ' :''}}">
+            <td>{{$user->not_active ? 'Nie aktywny -- ' :''}}{{$user->name}}</td>
             <td>{{$user->email}}</td>
             <td>{{$user->role->type}}</td>
             <td>
@@ -37,7 +37,7 @@
                                 {{ method_field('DELETE') }}
 
                                 <button type="submit" onClick="return confirm('Czy na pewno chcesz usunąć?')">
-                                    <i class="fa fa-minus-circle" aria-hidden="true"></i> Usuń
+                                    <i class="fa fa-minus-circle" aria-hidden="true"></i> Deaktywuj
                                 </button>
                             </form>
                         </li>

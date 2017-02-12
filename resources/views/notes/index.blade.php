@@ -36,7 +36,7 @@
                 </h4>
                 {{$note->title}}<br>
                 <p><pre>{{$note->note}}</pre></p>
-                <p class="text-right">{{$note->created_at}}</p>
+                <p class="text-right">{{dayWeek($note->created_at)}} {{$note->created_at}}</p>
             </div>
             @endif
 

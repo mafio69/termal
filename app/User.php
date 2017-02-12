@@ -54,4 +54,17 @@ class User extends Authenticatable
         }
         return false;
     }
+
+    public function events()
+    {
+        $this->hasMany('App\Event');
+    }
+    public function people()
+    {
+        $this->hasMany('App\Person');
+    }
+    public function customers()
+    {
+        $this->hasMany('App\Customer');
+    }
 }

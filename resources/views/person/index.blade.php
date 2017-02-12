@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="table-responsive">
+<div class="table-responsive outward" >
 <h4>Lista osób kontaktowych <span class="badge">{{$count}}</span> </h4>
 {{ $people->links() }}
-<table class="table">
+<table class="table" >
 	<tr><th>Imie</th><th>Nazwisko</th><th>Firma</th><th>Stanowisko</th><th>Telefon</th><th>Email</th><th>Akcja</th></tr>
 	@foreach($people as $person)
         <tr>

@@ -23,3 +23,15 @@
 }
 .has-error {border-color: darkred;
 box-shadow: red;}
+.outward{
+  overflow: visible !important;
+}
+.link-grey {
+  color: gray;
+  transition: 1s;
+}
+.link-grey:hover{
+  color:darken(gray,20%);
+  text-decoration: underline;
+  text-decoration-color: royalblue;
+}

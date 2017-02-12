@@ -28,7 +28,11 @@
             </span>
 			@endif
 		<input class="form-control {{ $errors->has('email') ? ' has-error' : '' }}" type="text" placeholder="Email" name="email">
-		<input class="form-control" type="text" placeholder="Osoba kontaktowa" name="person">
+			<select  class="form-control" name="statuses_id" >
+				@foreach($statuses as $status)
+					<option value="{{$status->id}}">{{$status->name}}</option>
+				@endforeach
+			</select>
 		<textarea class="form-control"  placeholder="Notatki" name="notes"> </textarea>
 		<input type="submit" class="btn btn-success" value="Dodaj">
 		</form>

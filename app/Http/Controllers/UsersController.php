@@ -6,7 +6,7 @@ use App\Role;
 use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Validation\Rule;
-
+use Illuminate\Contracts\Validation\Validator;
 
 class UsersController extends Controller
 {
@@ -45,16 +45,23 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
+
+
+        $niceNames = [  //nazwy dla pól formularza
+            'name' => 'Nazwa',
+            'email'=> 'Email adres',
+        ];
+        $rules = [  //zasady walidacji
             'name' => 'required|min:3',
             'email' => 'required|email|unique:customers',
-        ], [
-                'required' => 'Pole :attribute jest wymagane.',
-                'email' => 'Pole :attribute musi być poprawnym adresem email.',
-                'unique' => 'Podany email jest już w bazie.',
-                'min' => 'Nazwa firmy musi mieć minimum :min znaków',
-            ]
-        );
+        ];
+        $message =[ //wiadomości wyswietlane
+            'required' => 'Pole :attribute jest wymagane.',
+            'email' => 'Pole :attribute musi być poprawnym adresem email.',
+            'unique' => 'Podany email jest już w bazie.',
+            'min' => ':attribute musi mieć minimum :min znaków',
+        ];
+        $this->validate($request, $rules, $message, $niceNames);
 
         User::create([
             'role_id' => $request->role_id,
@@ -98,16 +105,21 @@ class UsersController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request, [
+        $niceNames = [  //nazwy dla pól formularza
+            'name' => 'Nazwa',
+            'email'=> 'Email adres',
+        ];
+        $rules = [  //zasady walidacji
             'name' => 'required|min:3',
-            'email' => ['required', 'email', 'max:125', Rule::unique('users')->ignore($id)],
-        ], [
-                'required' => 'Pole :attribute jest wymagane.',
-                'email' => 'Pole :attribute musi być poprawnym adresem email.',
-                'unique' => 'Podany email jest już w bazie.',
-                'min' => 'Nazwa firmy musi mieć minimum :min znaków',
-            ]
-        );
+            'email' => 'required|email|unique:customers',
+        ];
+        $message =[ //wiadomości wyswietlane
+            'required' => 'Pole :attribute jest wymagane.',
+            'email' => 'Pole :attribute musi być poprawnym adresem email.',
+            'unique' => 'Podany email jest już w bazie.',
+            'min' => ':attribute musi mieć minimum :min znaków',
+        ];
+        $this->validate($request, $rules, $message, $niceNames);
         User::where('id', $id)->update([
             'name' => $request->name,
             'email' => $request->email,
@@ -125,7 +137,15 @@ class UsersController extends Controller
     public function destroy($id)
     {
         $user =User::find($id);
-        $user->delete();
+        $user->not_active= true;
+        $password = bcrypt(random_int(2,5000).time());
+        $user->password = $password;
+        $user->role = 4;
+        $email = 'awd'.$user->email;
+        $user->email= $email;
+        $user->save();
+
+        session()->flash('flash_message', 'Uzytkownik został zdeaktywowany!');
         return redirect()->route('users');
     }
 

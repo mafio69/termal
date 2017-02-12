@@ -28,7 +28,15 @@
             </span>
 		@endif
 	<input class="form-control {{ $errors->has('email') ? ' has-error' : '' }}" type="text" value="{{$customer->email}}" placeholder="Email" name="email">
-	
+		<select class="form-control" name="statuses_id">
+			@foreach($statuses as $status)
+				<option
+						@if($status->id == $customer->statuses_id)
+								selected
+						@endif
+				value="{{$status->id}}">{{$status->name}}</option>
+			@endforeach
+		</select>
 	<textarea class="form-control" type="text" value="{{$customer->notes}}" placeholder="Notatki" name="notes">
 		{{$customer->notes}}
 	</textarea>

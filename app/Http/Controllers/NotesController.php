@@ -33,6 +33,7 @@ class NotesController extends Controller
     {
         
         $customer = Customer::findOrFail($customer_id);
+       
         return view('notes.create',compact('customer'));
     }
 
@@ -53,9 +54,15 @@ class NotesController extends Controller
     {
         $note = new Note;
         $note->customer_id = $request->customer_id;
+        $note->user_id = auth()->id();
         $note->title = $request->title;
         $note->note = $request->note;
         $note->save();
+        if($request->customer_id == 55){
+            $customer_id = $request->customer_id;
+            $notes = Note::where('customer_id',$request->customer_id)->with('customer')->orderBy('created_at','desc')->get();
+            return view('notes.list',compact('notes','customer_id'));
+        }
         return redirect('/klienci/'.$request->customer_id);
     }
 

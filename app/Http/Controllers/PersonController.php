@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+//use Illuminate\Console\Scheduling\Event;
 use Illuminate\Http\Request;
 use App\Customer;
 use App\Person;
+use App\Event;
 use Illuminate\Validation\Rule;
 
 class PersonController extends Controller
@@ -18,8 +20,8 @@ class PersonController extends Controller
     {
         $count = Person::with('customer')->get()->count();
         $people = Person::with('customer')->paginate(20);
-       
-       return view('person.index', compact('people', 'count')); 
+
+        return view('person.index', compact('people', 'count'));
     }
 
     /**
@@ -29,19 +31,19 @@ class PersonController extends Controller
      */
     public function create($customer_id)
     {
-        $customer= Customer::findOrFail($customer_id);
-        return view('person.create',compact('customer'));
+        $customer = Customer::findOrFail($customer_id);
+        return view('person.create', compact('customer'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-         $this->validate($request, [
+        $this->validate($request, [
             'imie' => 'required|min:3',
             'nazwisko' => 'required|min:3',
             'email' => 'required|email',
@@ -53,8 +55,9 @@ class PersonController extends Controller
             ]
         );
 
-          Person::create([
+        Person::create([
             'customer_id' => $request->customer_id,
+            'user_id' => auth()->id(),
             'imie' => $request->imie,
             'nazwisko' => $request->nazwisko,
             'position' => $request->position,
@@ -63,20 +66,21 @@ class PersonController extends Controller
             'description' => $request->description,
             'address' => $request->address,
             'email' => $request->email,
-            
+
         ]);
-          return redirect('/klienci/'.$request->customer_id);
+        $request->session()->flash('flash_message', 'Osoba zostało dodana!');
+        return redirect('/klienci/' . $request->customer_id);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-         $person = Person::with('customer')->findOrFail($id);
+        $person = Person::with('customer')->findOrFail($id);
 
         return view('person.show', compact('person'));
     }
@@ -84,26 +88,26 @@ class PersonController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
         $person = Person::with('customer')->findOrFail($id);
 
-        return view('person.edit',compact('person'));
+        return view('person.edit', compact('person'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-          $this->validate($request, [
+        $this->validate($request, [
             'imie' => 'required|min:3',
             'nazwisko' => 'required|min:3',
             'email' => ['required', 'email', 'max:125', Rule::unique('people')->ignore($id)],
@@ -115,7 +119,7 @@ class PersonController extends Controller
             ]
         );
 
-          Person::where('id', $id)->update([
+        Person::where('id', $id)->update([
             'customer_id' => $request->customer_id,
             'imie' => $request->imie,
             'nazwisko' => $request->nazwisko,
@@ -125,21 +129,26 @@ class PersonController extends Controller
             'description' => $request->description,
             'address' => $request->address,
             'email' => $request->email,
-            
+
         ]);
-           return redirect('/klienci/'.$request->customer_id);
+        $request->session()->flash('flash_message', 'Wpis został poprawiony!');
+        return redirect('/klienci/' . $request->customer_id);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        $person=Person::findOrFail($id);
+        $person = Person::findOrFail($id);
         $person->delete();
+        $events = Event::where('person_id', $id)->delete();
+       /* foreach ($events as $event) {
+            $event->delete();
+        }*/
         return back();
     }
 }

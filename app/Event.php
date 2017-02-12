@@ -4,9 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+class event extends Model
 
-
-class person extends Model
 {
     use SoftDeletes;
 
@@ -16,24 +15,21 @@ class person extends Model
      * @var array
      */
     protected $dates = ['deleted_at'];
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     protected $fillable = [
-        'imie', 'email', 'nazwisko','customer_id', 'address', 'phone', 'phone2', 'user_id'
+        'event_type_id', 'customer_id', 'person_id','project_id', 'phone', 'email', 'event_data',
+        'title', 'description' ,'activ','user_id'
     ];
-
     
-     public function customer()
-    {
+    public function event_type() {
+        return $this->belongsTo('App\EventType','event_type_id');
+    }
+    public function customer() {
         return $this->belongsTo('App\Customer');
     }
-    public function events()
-    {
-        return $this->hasMany('App\Event');
+    public function person() {
+        return $this->belongsTo('App\Person');
     }
+
     public function user()
     {
         return $this->belongsTo('App\User');
