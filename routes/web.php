@@ -62,6 +62,14 @@ Route::group([
         'uses' => 'EventsController@store',
         'as' => 'events.store'
     ]);
+    Route::get('/zdarzenie/{id}/edit', [
+        'uses' => 'EventsController@edit',
+        'as' => 'zdarzenie.id.edit'
+    ]);
+    Route::put('/zdarzenie/{id}', [
+        'uses' => 'EventsController@update',
+        'as' => 'zdarzenie.update'
+    ]);
     Route::get('/zdarzenie', [
         'uses' => 'EventsController@index',
         'as' => 'zdarzenie.index'
@@ -90,7 +98,14 @@ Route::group([
         'uses' => 'PersonController@index',
         'as' => 'osoba'
     ]);
-
+    Route::post('/zdarzenie/wylacz/{id}',[
+        'uses' => 'EventsController@off',
+        'as' => 'zdarzenie.wylacz'
+    ]);
+ Route::post('/zdarzenie/edit/{id}',[
+        'uses' => 'EventsController@update_description',
+        'as' => 'zdarzenie.edit'
+    ]);
 });
 ////////////////////////////////////Grupa dostępu admina
 Route::group([

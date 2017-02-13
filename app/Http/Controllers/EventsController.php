@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Customer;
 use App\Event;
+use App\person;
 
 class EventsController extends Controller
 {
@@ -15,7 +16,7 @@ class EventsController extends Controller
      */
     public function index()
     {
-        $events = Event::with('event_type')->with('customer')->with('user')->with('person')->orderBy('event_data')->get();
+        $events = Event::with('event_type')->with('customer')->with('user')->with('person')->orderBy('activ')->orderBy('event_data')->paginate(40);
         return view('events.index',compact('events'));
     }
 
@@ -98,7 +99,10 @@ class EventsController extends Controller
      */
     public function edit($id)
     {
-        //
+        $event =Event::with('customer')->with('event_type')->where('id',$id)->first();
+        $events = \App\EventType::get();
+
+        return view('events.edit',compact('event','events'));
     }
 
     /**
@@ -112,7 +116,21 @@ class EventsController extends Controller
     {
         //
     }
-
+    public function update_description(Request $request, $id) {
+      $event=Event::findOrFail($id);
+        $event->activ = $request->activ;
+        $event->description = $request->description;
+        $event->save();
+        session('flash_message','Wpis poprawiony');
+        return back();  
+    }
+     public function off(Request $request, $id)
+    {
+        $event=Event::findOrFail($id);
+        $event->activ = $request->activ;
+        $event->save();
+        return back();
+    }
     /**
      * Remove the specified resource from storage.
      *

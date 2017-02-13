@@ -107,7 +107,7 @@ function czas($data)
         } elseif ($t < 1 && $d > 0) {
             return '<span class="text-success bg-success">Pozostało: ' . $d . ' d, ' . $g . ' g, ' . $m . ' m. </span>';
         } elseif ($t < 1 && $d < 1 && $g > 0) {
-            return 'Pozostało: ' . $g . '  g, ' . $m . ' m.</span>';
+            return '<span class="text-success bg-success">Pozostało: ' . $g . '  g, ' . $m . ' m.</span>';
         } elseif ($t < 1 && $d < 1 && $g < 1 && $m > 0) {
             return '<span class="text-warning bg-warning">Pozostało: ' . $m . '  m. </span>';
         } elseif ($t > 1 && $t < 2) {
@@ -117,4 +117,14 @@ function czas($data)
             return '<span class="text-success bg-success">Pozostało jeszcze, więcej niż tydzień.</span>';
         }
     }
+}
+ function dzien($data)
+ {
+     $dzien = date("Y-m-d",strtotime($data));
+     return $dzien;
+ }
+function godzina($data)
+{
+    $godzina = date("H:i:s",strtotime($data));
+    return $godzina;
 }

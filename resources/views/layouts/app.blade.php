@@ -12,6 +12,7 @@
 
     <!-- Styles -->
     <link href="{{url('/css/app.css')}}" rel="stylesheet">
+    <link href="{{url('/css/footable.bootstrap.min.css')}}" rel="stylesheet">
     <link href="{{url('/css/font-awesome.min.css')}}" rel="stylesheet">
     <!-- Scripts -->
     <script>
@@ -82,5 +83,11 @@
 </div>
     <!-- Scripts -->
     <script src="{{url('/js/app.js')}}"></script>
+    <script src="{{url('/js/footable.min.js')}}"></script>
+    <script>
+        $(function() {
+            $('table').footable();
+        });
+    </script>
 </body>
 </html>

@@ -35,3 +35,23 @@ box-shadow: red;}
   text-decoration: underline;
   text-decoration-color: royalblue;
 }
+.marginesy {
+  margin: .5rem;
+}
+.not_activ {
+  margin: 0;
+  opacity: .6;
+  padding: 0.7rem 1rem 0.7rem 1rem;
+  background-color: lighten(#9d9d9d,30%);
+  transition: .7s ;
+}
+.not_activ:hover{
+  opacity : 1;
+  background-color: lighten(#9d9d9d,38%);
+}
+.activ {
+  margin: 0;
+}
+.padding_0{
+  padding: 0;
+}

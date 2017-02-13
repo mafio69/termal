@@ -103,7 +103,7 @@ class CustomersController extends Controller
 
         $customer=Customer::with('person')->with('status')->find($id);
         //var_dump($customer->status());
-        $events = Event::with('event_type')->with('customer')->with('user')->with('person')->where('customer_id',$id)->orderBy('event_data')->get();
+        $events = Event::with('event_type')->with('customer')->with('user')->with('person')->where('customer_id',$id)->orderBy('activ')->orderBy('event_data')->get();
         $notes = Note::where('customer_id',$customer->id)->orderBy('created_at','desc')->limit(10)->get();
         
         return view('customers.show',compact('customer','notes','events'));

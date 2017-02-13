@@ -7735,4 +7735,30 @@ button.close {
   text-decoration-color: royalblue;
 }
 
+.marginesy {
+  margin: .5rem;
+}
+
+.not_activ {
+  margin: 0;
+  opacity: .6;
+  padding: 0.7rem 1rem 0.7rem 1rem;
+  background-color: #eaeaea;
+  -webkit-transition: .7s;
+  transition: .7s;
+}
+
+.not_activ:hover {
+  opacity: 1;
+  background-color: #fefefe;
+}
+
+.activ {
+  margin: 0;
+}
+
+.padding_0 {
+  padding: 0;
+}
+
 /*# sourceMappingURL=app.css.map */

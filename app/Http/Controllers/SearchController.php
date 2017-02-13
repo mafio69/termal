@@ -17,7 +17,7 @@ class SearchController extends Controller
     public function customers()
     {
         $search_phrase = Input::get('q');
-        $search_results = Customer::where('email', 'like', '%' . $search_phrase . '%')
+        $customers = Customer::where('email', 'like', '%' . $search_phrase . '%')
             ->orWhere('company', 'LIKE', '%' . $search_phrase . '%')
             ->orWhere('city', 'LIKE', '%' . $search_phrase . '%')
             ->orWhere('nip', 'LIKE', '%' . $search_phrase . '%')
@@ -27,6 +27,6 @@ class SearchController extends Controller
 
             ->paginate(10);
         $notes = Note::all();
-        return view('customers.search', compact('search_results', 'search_phrase', 'notes'));
+        return view('customers.search', compact('customers', 'search_phrase', 'notes'));
     }
 }

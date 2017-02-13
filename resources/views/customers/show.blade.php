@@ -97,7 +97,7 @@
 
                     </li>
                 @endforeach
-                <ol>
+                </ol>
 
 
         </div>
@@ -105,57 +105,119 @@
 
     </div>
     <div class="row">
-        <div class="col-sm-6">
-            <h4>Zdarzenia</h4>
+        <div class="col-sm-6 padding_0">
+            <h4>Zdarzenia &nbsp; &nbsp;<a href="{{url('/zdarzenie-dodaj/'.$customer->id)}}" title="Dodaj zdarzenie"><i
+                            class="fa fa-plus" aria-hidden="true"></i> </a></h4>
             @foreach($events as $event)
-                <div class="well">
+                <div class=" {{ $event->activ == 1 ? ' not_activ ' :'activ' }}">
+
                     <h4>{{$event->title}} &nbsp;&nbsp;
-                        <small class="pull-right">{!!  czas($event->event_data) !!}</small>
+                        <small class="pull-right">
+                            @if($event->activ != 1)
+                            {!!  czas($event->event_data) !!}
+                            @endif
+                        </small>
                     </h4>
+                    <form action="{{url('/zdarzenie/wylacz/'.$event->id)}}" method="Post">
+                        {{ csrf_field() }}
+                        <label class="radio-inline"><input type="radio"
+                                                           {{ $event->activ == null ? 'checked' :'' }} value=""
+                                                           name="activ">Aktywne</label>
+                        <label class="radio-inline"><input type="radio"
+                                                           {{ $event->activ != null ? 'checked' :'' }} value="1"
+                                                           name="activ">Nie aktywne</label>
+                        <button type="submit" class="btn btn-default btn-xs">Zmień</button>
+                    </form>
+                    Typ zdarzenia : {{$event->event_type->type}}<br>
                     Data zdarzenia: {{$event->event_data}} <br>
-                    @if($event->person->id)
+                    @if(is_object($event->person))
                         <a href="#" data-toggle="modal"
                            data-target="#myModal{{$loop->index}}"> {{$event->person->imie}} {{$event->person->nazwisko}}</a>
                         <br>
                     @endif
                     Email: {{$event->email}}<br>
                     Telefon:{{$event->phone}} <br>
-                    <p>{{$event->description}}</p>
+                    <p>{{$event->description}} <a href="#" data-toggle="modal"
+                                                  data-target="#edit{{$loop->index}}"><i class="fa fa-pencil"
+                                                                                         aria-hidden="true"></i></a></p>
                     <p class="text-muted text-right">Dodał : {{$event->user->name}}</p>
                 </div>
 
 
                 <!-- Modal ------------------------------------------------------------------------------------>
-                <div class="modal fade" id="myModal{{$loop->index}}" tabindex="-1" role="dialog"
-                     aria-labelledby="myModalLabel">
+                @if(is_object($event->person)) // gdy nie ma osoby kontaktowej nie ma obiektu $event->person i sie wywala to jest warunek bez którgo apka nie działa
+                    <div class="modal fade" id="myModal{{$loop->index}}" tabindex="-1" role="dialog"
+                         aria-labelledby="myModalLabel">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                                aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title"
+                                        id="myModalLabel">{{$event->person->imie}} {{$event->person->nazwisko}}</h4>
+                                </div>
+                                <div class="modal-body">
+                                    {{$event->person->imie}}{{$event->person->nazwisko}}<br>
+                                    Stanowisko :{{$event->person->position}} <br>
+                                    Email : {{$event->person->email}}<br>
+                                    Telefon : {{$event->person->phone}}<br>
+                                    Telefon : {{$event->person->phone2}}<br>
+                                    Opis : {{$event->person->description}}<br>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+          <!--  ////////////////////////////////MODAl edycji wpisu zdarzenia -->
+                <div class="modal fade" id="edit{{$loop->index}}" tabindex="-1" role="dialog"
+                     aria-labelledby="edit">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                             aria-hidden="true">&times;</span></button>
                                 <h4 class="modal-title"
-                                    id="myModalLabel">{{$event->person->imie}} {{$event->person->nazwisko}}</h4>
+                                    id="myModalLabel">Edycja wpisu zdarzenia</h4>
                             </div>
-                            <div class="modal-body">
-                                {{$event->person->imie}}{{$event->person->nazwisko}}<br>
-                                Stanowisko :{{$event->person->position}} <br>
-                                Email : {{$event->person->email}}<br>
-                                Telefon : {{$event->person->phone}}<br>
-                                Telefon : {{$event->person->phone2}}<br>
-                                Opis : {{$event->person->description}}<br>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <div class="modal-body clearfix">
+                                <form action="{{url('/zdarzenie/edit/'.$event->id)}}" method="Post">
+                                    {{ csrf_field() }}
 
+                                    <label class="radio-inline"><input type="radio"
+                                                                       {{ $event->activ == null ? 'checked' :'' }} value=""
+                                                                       name="activ">Aktywne</label>
+                                    <label class="radio-inline"><input type="radio"
+                                                                       {{ $event->activ != null ? 'checked' :'' }} value="1"
+                                                                       name="activ">Zakończone</label>
+                                    <textarea type="text" name="description" class="form-control">
+                                               {{$event->description }}
+                                            </textarea>
+
+
+                                    <hr>
+                                    <div class="pull-right">
+                                    <input type="submit" data-target="edit{{$loop->index}}"
+                                           class="btn btn-default " value="wyslij">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    </div>
+                                </form>
                             </div>
+
                         </div>
                     </div>
                 </div>
+
                 <!-- END Modal ------------------------------------------- <button type="button" class="btn btn-primary">Save changes</button>-------------------------------------->
             @endforeach
         </div>
         <div class="col-sm-6">
-            <h4>Notatki</h4>
+            <h4>Notatki &nbsp;&nbsp;<a href="{{url('/notes/'.$customer->id).'/create'}}" title="Notatka"><i
+                            class="fa fa-plus" aria-hidden="true"></i>
+                </a></h4>
             @if ($notes->count() > 0)
                 @foreach($notes as $note)
                     <div class="well">
