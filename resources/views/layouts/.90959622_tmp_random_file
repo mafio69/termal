@@ -62,7 +62,6 @@
                     </form>
                      <ul class="nav navbar-nav">
                         <li><a href="{{url('/home')}}">Start</a></li>
-                        <li><a href="{{url('/zdarzenie/jutro')}}">Jutro</a></li>
                     </ul>
 
                     @endif

@@ -7744,8 +7744,8 @@ button.close {
   opacity: .6;
   padding: 0.7rem 1rem 0.7rem 1rem;
   background-color: #eaeaea;
-  -webkit-transition: .7s;
-  transition: .7s;
+  -webkit-transition: .6s;
+  transition: .6s;
 }
 
 .not_activ:hover {

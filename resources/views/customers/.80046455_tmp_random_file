@@ -164,13 +164,10 @@
                             @if($event->activ != 1)
                                 {!!  czas($event->event_data) !!}
                             @endif
-                             </small>
-                              {{$event->event_type->type}}
-                      
+                        </small>
                     </h4>
-                    <div class="text-right">
-                        <a href="{{url('/zdarzenie/'.$event->id.'/edit')}}">  <i class="fa fa-pencil fa-lg" aria-hidden="true"></i> </a>
-                    </div>
+                    <a href="{{url('/zdarzenie/'.$event->id.'/edit')}}"> {{$event->event_type->type}} <i
+                                class="fa fa-pencil" aria-hidden="true"></i> </a>
                     <form action="{{url('/zdarzenie/wylacz/'.$event->id)}}" method="Post">
                         {{ csrf_field() }}
                         <label><input type="radio"
@@ -190,11 +187,10 @@
                     @endif
                     Email: {{$event->email}}<br>
                     Telefon: {{$event->phone}} <br>
-                    <p style="white-space: pre-wrap;">{{$event->description}} </p>
-                        <div class="text-right">
-                            <a href="#" data-toggle="modal" data-target="#edit{{$loop->index}}">
-                            <i class="fa fa-pencil" aria-hidden="true"></i></a>
-                        </div>
+                    <p style="white-space: pre-wrap;">{{$event->description}} <a href="#" data-toggle="modal"
+                                                  data-target="#edit{{$loop->index}}"><i
+                                    class="fa fa-pencil"
+                                    aria-hidden="true"></i></a></p>
                     <p class="text-muted text-right">Dodał : {{$event->user->name}}</p>
 
 

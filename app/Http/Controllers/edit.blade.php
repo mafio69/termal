@@ -82,7 +82,7 @@
                                                 <option  {{ $event->phone == $person->phone ? ' selected' : '' }} value="{{$person->phone}}">{{$person->imie }} {{$person->nazwisko}}</option>
                                             @endif
                                             @if($person->phone2)
-                                                <option {{$event->phone == $person->phone2 ? ' selected' : '' }} value="{{$person->phone2}}">{{$person->imie}} {{$person->nazwisko}}</option>
+                                                <option $event->phone == $person->phone2 ? ' selected' : '' }} value="{{$person->phone2}}">{{$person->imie}} {{$person->nazwisko}}</option>
                                             @endif
                                         @endforeach
                                     </select>

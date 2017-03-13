@@ -1,26 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="row">
-    <div class="col-sm-12">
-         <form class="form-inline pull-right" method="post" action="{{url('/zdarzenie/na-dzien')}}">
-             {{ csrf_field() }}
-                  <div class="form-group">
-                    <label for="date">Data: </label>
-                    <input type="date" class="form-control" value="{{date('Y-m-d')}}" id="date" name="date" placeholder="YYYY-MM-DD">
-                  </div>
-                  <button type="submit" class="btn btn-default">Wybierz dzień</button>
-            </form>   
-    </div>
-</div>
 
 @if(isset($now))
     <h3>Dziś wykonane</h3>
 @else
     <h3>Zadania na dziś</h3>
-
-@endif 
-   
+@endif    
     <div class="row">
         <div class="col-sm-5 col-xs-12">
             <h4>Projekty </h4>
@@ -74,7 +60,14 @@
         <div class="col-sm-4 col-xs-12 ">
 
             <h4>Zdarzenia</h4>
-           
+            <form class="form-inline" method="post" action="{{url('/zdarzenie/na-dzien')}}">
+             {{ csrf_field() }}
+                  <div class="form-group">
+                    <label for="date">Data: </label>
+                    <input type="date" class="form-control" id="date" name="date" placeholder="YYYY-MM-DD">
+                  </div>
+                  <button type="submit" class="btn btn-default">Wybierz dzień</button>
+            </form>
             @foreach($events as $event)
                 <div class="panel panel-default">
                     <div class="panel-body">
@@ -111,12 +104,10 @@
                         @endif
                         Email: {{$event->email}}<br>
                         Telefon: {{$event->phone}} <br>
-                        <p style="white-space: pre-wrap;">{{$event->description}}</p>
-                        <div class="text-right">
-                        <a href="#" class="text-right" data-toggle="modal" data-target="#edit{{$loop->index}}"><i class="fa fa-pencil"
+                        <p>{{$event->description}} <a href="#" data-toggle="modal"
+                                                      data-target="#edit{{$loop->index}}"><i class="fa fa-pencil"
                                                                                              aria-hidden="true"></i></a>
-                        </div>
-                        
+                        </p>
                         <p class="text-muted text-right">Dodał : {{$event->user->name}}</p>
                     </div>
 

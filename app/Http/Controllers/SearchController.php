@@ -20,10 +20,12 @@ class SearchController extends Controller
         $customers = Customer::where('id','<>',55)->where('email', 'like', '%' . $search_phrase . '%')
             ->orWhere('company', 'LIKE', '%' . $search_phrase . '%')
             ->orWhere('city', 'LIKE', '%' . $search_phrase . '%')
+            ->orWhere('street', 'LIKE', '%' . $search_phrase . '%')
             ->orWhere('nip', 'LIKE', '%' . $search_phrase . '%')
             ->orWhere('phone_1', 'LIKE', '%' . $search_phrase . '%')
             ->orWhere('phone_2', 'LIKE', '%' . $search_phrase . '%')
             ->orWhere('phone_3', 'LIKE', '%' . $search_phrase . '%')
+            ->orWhere('notes', 'LIKE', '%' . $search_phrase . '%')
 
             ->paginate(10);
         $notes = Note::all();

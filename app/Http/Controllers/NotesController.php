@@ -19,8 +19,18 @@ class NotesController extends Controller
      */
     public function index()
     {
-
-        $notes = Note::orderBy('created_at','desc')->with('customer')->paginate(20);
+        if(auth()->user()->role->type == 'admin' || auth()->user()->role->type == 'moderator' ){
+        $notes = Note::where('customer_id','<>',55)
+                ->orderBy('created_at','desc')
+                ->with('customer')
+                ->paginate(40);   
+        }else{
+        $notes = Note::where('customer_id','<>',55)
+                ->where('user_id',auth()->id())
+                ->orderBy('created_at','desc')
+                ->with('customer')
+                ->paginate(40);
+        }
         return view('notes.index',compact('notes'));
     }
 
@@ -40,8 +50,18 @@ class NotesController extends Controller
 
     public function roster($customer_id)
     {
-       
-        $notes = Note::where('customer_id',$customer_id)->with('customer')->orderBy('created_at','desc')->get();
+        if(auth()->user()->role->type == 'admin' || auth()->user()->role->type == 'moderator' ){
+         $notes = Note::where('customer_id',$customer_id)
+                 ->with('customer')
+                 ->orderBy('created_at','desc')
+                 ->get();}
+        else{
+        $notes = Note::where('customer_id',$customer_id)
+                ->where('user_id',auth()->id())
+                ->with('customer')
+                ->orderBy('created_at','desc')
+                ->get();
+        }
         return view('notes.list',compact('notes','customer_id'));
     }
     /**
@@ -60,7 +80,10 @@ class NotesController extends Controller
         $note->save();
         if($request->customer_id == 55){
             $customer_id = $request->customer_id;
-            $notes = Note::where('customer_id',$request->customer_id)->with('customer')->orderBy('created_at','desc')->get();
+            $notes = Note::where('customer_id',$request->customer_id)
+                    ->with('customer')
+                    ->orderBy('created_at','desc')
+                    ->get();
             return view('notes.list',compact('notes','customer_id'));
         }
         if($request->customer_id != 55)

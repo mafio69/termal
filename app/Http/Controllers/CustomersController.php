@@ -31,13 +31,13 @@ class CustomersController extends Controller
         $count = $customer->count()-1;
         $statuses = Status::orderBy('name')->get();
         $customers=Customer::with('status')->with('events')->where('id','<>',55)->orderBy('city','ASC')->paginate(20);
-        $notes = Note::all();
+        $notes = Note::where('user_id',auth()->id())->get();
         }else{
         $customer=Customer::where('id','<>',55)->where('statuses_id',$statuses_id)->orderBy('city','ASC')->get();
         $count = $customer->count();
         $statuses = Status::orderBy('name')->get();
         $customers=Customer::with('status')->with('events')->where('id','<>',55)->where('statuses_id',$statuses_id)->orderBy('city','ASC')->paginate(20);
-        $notes = Note::all();   
+        $notes = Note::where('user_id',auth()->id())->get();
         }
         return view('customers.index', compact('customers','notes','count','statuses'));
     }
@@ -92,7 +92,7 @@ class CustomersController extends Controller
                 'min' => 'Nazwa firmy musi mieć minimum :min znaków',
             ]
         );
-        Customer::create([
+        $user=Customer::create([
             'company' => trim($request->company),
             'city' => trim($request->city),
             'nr' => trim($request->nr),
@@ -110,7 +110,8 @@ class CustomersController extends Controller
             'notes' => trim($request->notes),
 
         ]);
-        return redirect('/klienci-status');
+
+        return redirect('/klienci/'.$user->id);
     }
 
     /**
@@ -126,7 +127,7 @@ class CustomersController extends Controller
         $projects = Project::with('events')->where('customer_id',$id)->get();
         //var_dump($customer->status());
         $events = Event::with('event_type')->with('customer')->with('user')->with('person')->where('customer_id',$id)->orderBy('activ')->orderBy('event_data')->get();
-        $notes = Note::where('customer_id',$customer->id)->orderBy('created_at','desc')->limit(10)->get();
+        $notes = Note::where('customer_id',$customer->id)->where('user_id',auth()->id())->orderBy('created_at','desc')->limit(10)->get();
         
         return view('customers.show',compact('customer','notes','events','projects'));
     }
@@ -213,7 +214,7 @@ class CustomersController extends Controller
     {
         $customer =Customer::find($id);
         $customer->delete();
-        Note::where('customer_id',$id)->delete();
+        Note::where('customer_id',$id)->where('user_id',auth()->id())->delete();
         Person::where('customer_id',$id)->delete();
         Event::where('customer_id',$id)->delete();
         session()->flash('flash_message', 'Klient został usunięty , wraz z wszytkimi danymi o nim!');

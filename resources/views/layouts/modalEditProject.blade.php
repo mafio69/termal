@@ -1,4 +1,4 @@
- <div class="modal fade" id="editProject{{$loop->index}}" tabindex="-1" role="dialog"
+ <div class="modal fade" id="editProject{{$project->id}}" tabindex="-1" role="dialog"
                                      aria-labelledby="edit">
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">

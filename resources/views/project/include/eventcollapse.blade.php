@@ -1,6 +1,6 @@
 
-    <li class="list-group-item"><button class="btn btn-link" data-toggle="collapse" data-target="#collapse{{$event->id}}">{{$event->title}} </button>{{$event->created_at}}</li>
-      <div id="collapse{{$event->id}}" class="panel-collapse collapse">
+    <span class="{{ $event->activ == 1 ? ' not_activ ' :'' }}"><button style="padding: 0;margin:.5rem 0;" class="btn btn-link " data-toggle="collapse" data-target="#collapse{{$event->id}}">{{$event->title}} </button> {{$event->event_data}}</span><br>
+      <div id="collapse{{$event->id}}" class="panel-collapse collapse {{isset($coolapse) ? $coolapse :'' }}">
         <div class="panel-body">
               <div class=" {{ $event->activ == 1 ? ' not_activ ' :'activ' }}">
                         <small class="pull-right">
@@ -12,18 +12,14 @@
                     <a href="{{url('/zdarzenie/'.$event->id.'/edit')}}" > {{$event->event_type->type}} <i class="fa fa-pencil" aria-hidden="true"></i> </a>
                     <form action="{{url('/zdarzenie/wylacz/'.$event->id)}}" method="Post">
                         {{ csrf_field() }}
-                        <label ><input type="radio"
-                                                           {{ $event->activ == null ? 'checked' :'' }} value=""
-                                                           name="activ">Aktywne</label>
-                        <label ><input type="radio"
-                                                           {{ $event->activ != null ? 'checked' :'' }} value="1"
-                                                           name="activ">Nie aktywne</label>
+                        <label ><input type="radio" {{ $event->activ == null ? 'checked' :'' }} value="" name="activ">Aktywne</label>
+                        <label ><input type="radio" {{ $event->activ != null ? 'checked' :'' }} value="1" name="activ">Nie aktywne</label>
                         <button type="submit" class="btn btn-default btn-xs">Zmień</button>
                     </form>
                     Typ zdarzenia : {{$event->event_type->type}}<br>
                     Data zdarzenia: {{$event->event_data}} <br>
                     @if(is_object($event->person))
-                    Osoba prowadząca: {{$event->person->imie}} {{$event->person->nazwisko}}</a>
+                    Osoba prowadząca: {{$event->person->imie}} {{$event->person->nazwisko}}
                         <br>
                     @endif
                     Email: {{$event->email}}<br>

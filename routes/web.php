@@ -34,13 +34,15 @@ Route::get('password/reset/{token}', ['as' => 'password.reset.token', 'uses' => 
 Route::post('password/reset', ['as' => 'password.reset.post', 'uses' => 'Auth\ResetPasswordController@reset']);
 
 
-Route::get('/home', 'HomeController@index')->name('home');
+
 
 //Grupa osób z przypisanymi rolami wszyscy
 Route::group([
     'middleware' => 'role',
     'role' => ['admin', 'moderator', 'user']
 ], function () {
+    Route::get('/home', 'HomeController@index')->name('home');
+    Route::get('/home-teraz', 'HomeController@teraz')->name('home-teraz');
     Route::resource('/klienci', 'CustomersController', ['except' => ['destroy', 'index']]);
     Route::get('/search', 'SearchController@customers')->name('search.customers');
     Route::resource('/notes', 'NotesController', ['except' => ['create', 'destroy']]);
@@ -70,6 +72,14 @@ Route::group([
         'uses' => 'EventsController@update',
         'as' => 'zdarzenie.update'
     ]);
+     Route::post('/zdarzenie/na-dzien', [
+        'uses' => 'EventsController@showdate',
+        'as' => 'zdarzenie.showdate'
+    ]);
+       Route::get('/zdarzenie/jutro', [
+        'uses' => 'EventsController@tomorrow',
+        'as' => 'zdarzenie.tomorrow'
+    ]);
     Route::get('/zdarzenie', [
         'uses' => 'EventsController@index',
         'as' => 'zdarzenie.index'
@@ -82,6 +92,10 @@ Route::group([
         'uses' => 'EventsController@update_description',
         'as' => 'zdarzenie.edit'
     ]);
+     Route::get('/zdarzenie/{customer_id}/create/{project_id}', [
+        'uses' => 'EventsController@createProject',
+        'as' => 'event.customer_id.create.project_id'
+    ]);
     Route::get('/projekt', [
         'uses' => 'ProjectsController@index',
         'as' => 'project.index'
@@ -90,10 +104,11 @@ Route::group([
         'uses' => 'ProjectsController@create',
         'as' => 'project.customer_id.create'
     ]);
-    Route::get('/zdarzenie/{customer_id}/create/{project_id}', [
-        'uses' => 'EventsController@createProject',
-        'as' => 'event.customer_id.create.project_id'
+    Route::get('/projekt/{id}', [
+        'uses' => 'ProjectsController@show',
+        'as' => 'project.show'
     ]);
+   
     Route::post('/projekt/store', [
         'uses' => 'ProjectsController@store',
         'as' => 'projects.store'

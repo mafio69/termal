@@ -105,7 +105,7 @@
                                 <label for="email" class="col-md-4 control-label">Data wydarzenia</label>
 
                                 <div class="col-md-6">
-                                   <input placeholder="RRRR-MM-DD" value="{{ old('date') }}"  class="form-control" required type="date" name="date">
+                                   <input placeholder="RRRR-MM-DD" value="{{date('Y-m-d')}}"  class="form-control" required type="date" name="date">
                                     @if ($errors->has('email'))
                                         <span class="help-block">
                                         <strong>{{ $errors->first('email') }}</strong>
@@ -118,7 +118,7 @@
                                 <label for="email" class="col-md-4 control-label">Godzina wydarzenia</label>
 
                                 <div class="col-md-6">
-                                    <input placeholder="GG:MM" value="{{ old('time') }}" class="form-control" required type="time" name="time">
+                                    <input placeholder="GG:MM" value="{{date('H:i')}}" class="form-control" required type="time" name="time">
                                     @if ($errors->has('time'))
                                         <span class="help-block">
                                         <strong>{{ $errors->first('time') }}</strong>

@@ -1,0 +1,9 @@
+body {
+    background: #ffffff;
+    color: #000;
+    font-size:12px;}
+#sidebar {display: none;}
+.pagination, .pagination li , .dropdown {display: none;}
+a[href]:after {
+    content: none !important;
+  }

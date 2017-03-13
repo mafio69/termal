@@ -11,6 +11,7 @@
                                             <div class="modal-body clearfix">
                                                 <form action="{{url('/zdarzenie/edit/'.$event->id)}}" method="Post">
                                                     {{ csrf_field() }}
+                                                  
 
                                                     <label ><input type="radio"
                                                                                        {{ $event->activ == null ? 'checked' :'' }} value=""

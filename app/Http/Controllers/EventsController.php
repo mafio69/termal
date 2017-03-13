@@ -16,8 +16,25 @@ class EventsController extends Controller
      */
     public function index()
     {
-        $licznik = Event::where('activ' , null)->count();
-        $events = Event::with('event_type')->with('customer')->with('user')->with('person')->where('event_data','>',date('Y-m-d',strtotime("-14 day")))->orderBy('activ')->orderBy('event_data')->paginate(40);
+        $licznik = Event::where('activ' , null)->where('user_id',auth()->id())->count();
+        if(auth()->user()->role->type == 'admin' || auth()->user()->role->type == 'moderator' ){
+         $events = Event::with('event_type')
+                 ->with('customer')
+                 ->with('user')
+                 ->with('person')
+                 ->where('event_data','>',date('Y-m-d',strtotime("-14 day")))
+                 ->orderBy('activ')
+                 ->orderBy('event_data')
+                 ->paginate(40);   
+        }else{
+        $events = Event::with('event_type')
+                ->where('user_id',auth()->id())
+                ->with('customer')->with('user')
+                ->with('person')->where('event_data','>',date('Y-m-d',strtotime("-14 day")))
+                ->orderBy('activ')
+                ->orderBy('event_data')
+                ->paginate(40);
+        }
         return view('events.index',compact('events','licznik'));
     }
 
@@ -29,7 +46,7 @@ class EventsController extends Controller
     public function create($id = null)
     {
         $customer = \App\customer::with('person')->findOrFail($id);
-        $events = \App\EventType::get();
+        $events = \App\EventType::all();
         return view('events.create', compact('customer','events'));
     }
     public function createProject($consumer_id,$project_id)
@@ -107,7 +124,10 @@ class EventsController extends Controller
      */
     public function edit($id)
     {
-        $event =Event::with('customer')->with('event_type')->where('id',$id)->first();
+        $event =Event::with('customer')
+                ->with('event_type')
+                ->where('id',$id)
+                ->first();
         $events = \App\EventType::get();
 
         return view('events.edit',compact('event','events'));
@@ -187,5 +207,63 @@ class EventsController extends Controller
     {
         $event = Event::findOrFail($id);
         $event->delete();
+    }
+    public function showDate(Request $request) {
+         $licznik = Event::whereDate('event_data', $request->date)->where('user_id',auth()->id())->count();
+        if(auth()->user()->role->type == 'admin' || auth()->user()->role->type == 'moderator' ){
+         $events = Event::
+                   whereDate('event_data', $request->date)
+                 ->with('event_type')
+                 ->with('customer')
+                 ->with('user')
+                 ->with('person')
+                 ->orderBy('activ')
+                 ->orderBy('event_data')
+                 ->paginate(40);  
+                 $data=$request->date;  
+        }else{
+        $events = Event::
+                  whereDate('event_data', $request->date)
+                ->where('user_id',auth()->id())
+                ->with('event_type')
+                 ->with('customer')
+                 ->with('user')
+                 ->with('person')
+                 ->orderBy('activ')
+                 ->orderBy('event_data')
+                 ->paginate(40);  
+                  $data=$request->date; 
+        }
+        return view('events.lista',compact('events','licznik','data'));
+   
+    }
+     public function tomorrow() {
+        $data=date('Y-m-d',strtotime("+1 day"));
+         $licznik = Event::whereDate('event_data', $data)->where('user_id',auth()->id())->count();
+        if(auth()->user()->role->type == 'admin' || auth()->user()->role->type == 'moderator' ){
+         $events = Event::
+                  where('event_data','>',$data)
+                 ->with('event_type')
+                 ->with('customer')
+                 ->with('user')
+                 ->with('person')
+                 ->orderBy('activ')
+                 ->orderBy('event_data')
+                 ->paginate(40);  
+
+        }else{
+        $events = Event::
+                  where('event_data','>',$data)
+                ->where('user_id',auth()->id())
+                ->with('event_type')
+                 ->with('customer')
+                 ->with('user')
+                 ->with('person')
+                 ->orderBy('activ')
+                 ->orderBy('event_data')
+                 ->paginate(40);  
+        }
+        return view('events.lista',compact('events','licznik','data'));
+   
     }
 }

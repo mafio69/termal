@@ -111,7 +111,7 @@
                         @endif
                         Email: {{$event->email}}<br>
                         Telefon: {{$event->phone}} <br>
-                        <p style="white-space: pre-wrap;">{{$event->description}}</p>
+                        <p><pre>{{$event->description}}</pre></p>
                         <div class="text-right">
                         <a href="#" class="text-right" data-toggle="modal" data-target="#edit{{$loop->index}}"><i class="fa fa-pencil"
                                                                                              aria-hidden="true"></i></a>

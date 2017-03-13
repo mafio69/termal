@@ -83,7 +83,19 @@ class ProjectsController extends Controller
      */
     public function show($id)
     {
-        //
+       $project = Project::with('customer')
+                ->with('user')
+                ->with('events')
+                ->with('events.user')
+                ->with('events.person')
+                ->with('events.customer')
+                ->with('events.event_type')
+                ->orderBy('not_activ')
+                ->orderBy('created_at')
+                ->find($id);
+                $coolapse ='in';
+
+        return view('project.show', compact('project','coolapse'));
     }
 
     /**

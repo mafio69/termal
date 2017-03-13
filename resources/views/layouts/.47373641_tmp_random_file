@@ -8,10 +8,9 @@
     @endif
     <a class="btn btn-raised" href="{{ url('/klienci/create')}}"><i class="fa fa-plus" aria-hidden="true"></i>
         Dodaj klienta</a><br>
-     <a class="btn btn-raised" href="{{ url('/home-teraz')}}"><i class="fa fa-eye" aria-hidden="true"></i> Dziś wykonane</a>
-       
+
     <a class="btn btn-raised" href="{{ url('/klienci-status')}}"><i class="fa fa-eye" aria-hidden="true"></i> Klienci</a>
-    
+   
     <a class="btn btn-raised" href="{{ url('/projekt')}}"><i class="fa fa-eye" aria-hidden="true"></i> Projekty</a>
    
     <a class="btn btn-raised" href="{{ url('/zdarzenie')}}"><i class="fa fa-eye" aria-hidden="true"></i> Zdarzenia</a>
