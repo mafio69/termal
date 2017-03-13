@@ -242,7 +242,7 @@ class EventsController extends Controller
          $licznik = Event::whereDate('event_data', $data)->where('user_id',auth()->id())->count();
         if(auth()->user()->role->type == 'admin' || auth()->user()->role->type == 'moderator' ){
          $events = Event::
-                  where('event_data','>',$data)
+                whereDate('event_data',$data)
                  ->with('event_type')
                  ->with('customer')
                  ->with('user')
@@ -253,7 +253,7 @@ class EventsController extends Controller
 
         }else{
         $events = Event::
-                  where('event_data','>',$data)
+                    whereDate('event_data',$data)
                 ->where('user_id',auth()->id())
                 ->with('event_type')
                  ->with('customer')
